@@ -1,0 +1,19 @@
+<%- include('_Layout/head', {title : 'Login'}); -%>
+    <%- include('_Layout/sidebar', {active: 'Home'}) -%>
+        <section>
+            <div class="container">
+                <h1 class="text-center">Login</h1>
+                <% if (error != null || error != undefined) { %>
+                    <p class="text-center text-danger">
+                        <%= error %>
+                    </p>
+                    <% } %>
+                        <form method="post" action="auth">
+                            <input class="form-control mb-3" type="text" name="username" id="username-input-login" placeholder="Username" required>
+                            <input class="form-control mb-4" type="password" name="password" id="password-input-login" placeholder="Password" required>
+                            <button class="btn btn-primary btn-block" id="button-submit-login" type="submit">Accedi</button>
+                        </form>
+            </div>
+        </section>
+
+        <%- include('_Layout/footer'); -%>

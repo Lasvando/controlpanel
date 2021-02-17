@@ -1,0 +1,115 @@
+<%- include('_Layout/head', {title : 'Aggiungi Elemento'}); -%>
+    <%- include('_Layout/sidebar', {active: 'Aggiungi Elemento'}) -%>
+        <section>
+            <div class="container">
+                <h1 class="text-center">Aggiungi Elemento</h1>
+
+                <form method="post" action="#" class="mb-4 my-5">
+                    <input class="form-control mb-3" type="text" name="nomeElemento" id="nomeElemento" maxlength="15" placeholder="Nome">
+                    <input class="form-control mb-3" type="text" name="ip" id="ip" maxlength="15" placeholder="Indirizzo IP">
+                    <select id="sede" class="form-control mb-3" name="sede">
+                        <% if (sedi.length == 0) { %>
+                            <option>Nessuna sede presente nel DB</option>
+                        <% }else{ %>
+                            <option selected disabled>Sede</option>
+                            <% sedi.forEach(sede => { %>
+                                <option>
+                                    <%- sede['nome'] %>
+                                </option>
+                            <% }) %>
+                        <% } %>
+                    </select>
+
+                    <select id="nomeCategoria" class="form-control mb-3" name="nomeCategoria">
+                        <% if (categorie.length == 0) { %>
+                            <option>Nessuna categoria presente nel DB</option>
+                        <% }else{ %>
+                            <option selected disabled>Categoria</option>
+                            <% categorie.forEach(categoria => { %>
+                                <option>
+                                    <%- categoria['nome'] %>
+                                </option>
+                            <% }) %>
+                        <% } %>
+                    </select>
+
+                    <select id="nomeSezione" class="form-control mb-3" name="nomeSezione">
+                        <% if (sezioni.length == 0) { %>
+                            <option>Nessuna sezione presente nel DB</option>
+                        <% }else{ %>
+                            <option selected disabled>Sezione</option>
+                            <% sezioni.forEach(sezione => { %>
+                                <option>
+                                    <%- sezione['nome'] %>
+                                </option>
+                            <% }) %>
+                        <% } %>
+                    </select>
+                    <button id="submitBtn" class="btn btn-success btn-block" type="submit">Inserisci</button>
+                </form>
+            </div>
+            <script>
+                document.getElementById("submitBtn").addEventListener("click", function(event) {
+                    event.preventDefault();
+
+                    let nomeElemento;
+                    let indirizzoIp;
+                    let sede;
+                    let nomeCategoria;
+                    let nomeSezione;
+                    //////////////////////////////////////////////////////////////////
+                    if (document.getElementById('nomeCategoria').value === "") {
+                        alert("Selezionare una categoria");
+                        document.getElementById('nomeCategoria').classList += ' border border-danger';
+                        return;
+                    } else
+                        nomeCategoria = document.getElementById('nomeCategoria').value;
+                    //////////////////////////////////////////////////////////////////
+                    if (document.getElementById('nomeElemento').value === "") {
+                        alert("Inserire un nome");
+                        document.getElementById('nomeElemento').classList += ' border border-danger';
+                        return;
+                    } else
+                        nomeElemento = document.getElementById('nomeElemento').value;
+                    //////////////////////////////////////////////////////////////////
+                    if (document.getElementById('ip').value === "") {
+                        alert("Inserire un indirizzo IP");
+                        document.getElementById('ip').classList += ' border border-danger';
+                        return;
+                    } else
+                        indirizzoIp = document.getElementById('ip').value;
+                    //////////////////////////////////////////////////////////////////
+                    if (document.getElementById('sede').value === "") {
+                        alert("Inserire una sede");
+                        document.getElementById('sede').classList += ' border border-danger';
+                        return;
+                    } else
+                        sede = document.getElementById('sede').value;
+                    //////////////////////////////////////////////////////////////////
+                    if (document.getElementById('nomeSezione').value === "") {
+                        alert("Inserire una sezione");
+                        document.getElementById('nomeSezione').classList += ' border border-danger';
+                        return;
+                    } else
+                        nomeSezione = document.getElementById('nomeSezione').value;
+
+
+
+                    var http = new XMLHttpRequest();
+                    var url = '/addElement';
+                    var params = `nomeElemento=${nomeElemento}&indirizzoIp=${indirizzoIp}&sede=${sede}&nomeCategoria=${nomeCategoria}&nomeSezione=${nomeSezione}`;
+                    http.open('POST', url, true);
+                    //Send the proper header information along with the request
+                    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    http.onreadystatechange = function() { //Call a function when the state changes.
+                        if (http.readyState == 4 && http.status == 200) {
+                            alert(`Elemento: ${nomeElemento}\nInserito con successo.`)
+                            location.reload();
+                        }
+                    }
+                    http.send(params);
+                });
+            </script>
+        </section>
+        <%- include('_Layout/footer'); -%>

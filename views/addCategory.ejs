@@ -1,0 +1,81 @@
+<%- include('_Layout/head', {title : 'Aggiungi Categoria'}); -%>
+    <%- include('_Layout/sidebar', {active: 'Aggiungi Categoria'}) -%>
+        <section>
+            <div class="container">
+
+                <h1 class="text-center">Aggiungi Categoria</h1>
+
+                <form method="post" action="#" class="mb-4 my-5 d-flex justify-content-center">
+                    <div class="d-inline-flex">
+                        <input class="form-control mr-2" type="text" name="nomeCategoria" id="nomeCategoria" maxlength="15" placeholder="Aggiungi Categoria">
+                        <button id="submitBtn" class="btn btn-success" type="submit">Inserisci</button>
+                    </div>
+                </form>
+
+                <div class="list-group d-flex m-auto">
+                    <% categorie.forEach(categoria => { %>
+                        <a href="#" id="<%- categoria['id'] %>-cat" class="list-group-item list-group-item-action text-center" data-toggle="tooltip" data-placement="right" title="Clicca per eliminare" onclick="deleteCategory(this.id)">
+                            <%- categoria['nome'] %>
+                        </a>
+                        <% }) %>
+                            <% if (categorie.length == 0) { %>
+                                <li class="list-group-item text-danger text-center font-weight-bold">Nessuna categoria presente nel DB</li>
+                                <% } %>
+                </div>
+            </div>
+            <script>
+                document.getElementById("submitBtn").addEventListener("click", function(event) {
+                    event.preventDefault();
+
+                    let nomeCategoria;
+
+                    if (document.getElementById('nomeCategoria').value === "") {
+                        alert("Inserire un nome");
+                        document.getElementById('nomeCategoria').classList += ' border border-danger';
+                        return;
+                    } else
+                        nomeCategoria = document.getElementById('nomeCategoria').value;
+
+                    var http = new XMLHttpRequest();
+                    var url = '/addCategory';
+                    var params = `nomeCategoria=${nomeCategoria}`;
+                    http.open('POST', url, true);
+                    //Send the proper header information along with the request
+                    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    http.onreadystatechange = function() { //Call a function when the state changes.
+                        if (http.readyState == 4 && http.status == 200) {
+                            alert(`Categoria: ${nomeCategoria}\nInserita con successo.`)
+                            location.reload();
+                        }
+                    }
+                    http.send(params);
+                });
+
+                function deleteCategory(id) {
+                    if (!confirm(`ATTENZIONE\nSei sicuro di voler eliminare: ${document.getElementById(id).innerText}?`))
+                        return;
+
+                    idCategoria = id.substring(0, id.length - 4);
+                    console.log(idCategoria);
+                    nomeCategoria = document.getElementById(id).innerText;
+
+                    var http = new XMLHttpRequest();
+                    var url = '/deleteCategory';
+                    var params = `idCategoria=${idCategoria}`;
+                    http.open('POST', url, true);
+                    //Send the proper header information along with the request
+                    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    http.onreadystatechange = function() { //Call a function when the state changes.
+                        if (http.readyState == 4 && http.status == 200) {
+                            alert(`Categoria: ${nomeCategoria}\nEliminata con successo.`);
+                            location.reload();
+                        }
+                    }
+                    http.send(params);
+                }
+            </script>
+        </section>
+
+        <%- include('_Layout/footer'); -%>

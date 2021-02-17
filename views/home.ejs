@@ -1,0 +1,81 @@
+<%- include('_Layout/head', {title : 'Home'}); -%>
+    <%- include('_Layout/sidebar', {active: 'Home'}) -%>
+
+        <section>
+            <% sezioni.forEach(sezione => { %>
+                <div class="row m-5">
+                    <div class="col-lg-12">
+                        <h4 class="p-2 text-white" style="width: 100%; background-color:#333;">
+                            <%= sezione['nome'] %>
+                        </h4>
+                        <ul class="list-group list-group-horizontal">
+                            <% let counterSezione = 0 %>
+                                <% elementi.forEach(elemento => { %>
+                                    <% if (elemento['sezione'] == sezione['nome']) { %>
+                                        <% counterSezione++;  %>
+                                            <% } %>
+                                                <% }) %>
+                                                    <% if (counterSezione == 0) { %>
+                                                        <h3 class="text-danger text-center m-auto font-weight-bold">Nessun elemento presente nella sezione</h3>
+                                                        <% } else { %>
+                                                            <% elementi.forEach(elemento => { %>
+                                                                <% if (elemento['sezione'] == sezione['nome']) { %>
+                                                                    <a id="<%= elemento['id'] %>" href="#" class="mx-1 element btn btn-sq-lg border-dark d-flex flex-column" aria-pressed="false">
+                                                                        <svg width="7em" height="7em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z" />
+                                        <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                        <path fill-rule="evenodd"
+                                            d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z" />
+                                    </svg>
+                                                                        <span class="font-weight-bold">
+                                        <%= elemento['ip'] %> 
+                                    </span>
+                                                                        <span class="font-weight-bold">
+                                        <%= elemento['nome'] %> 
+                                    </span>
+                                                                    </a>
+
+                                                                    <% } %>
+                                                                        <% }) %>
+                                                                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+                <% }) %>
+                    <script>
+                        async function ping() {
+                            let elementArray = document.getElementsByClassName('element');
+                            var f = (function() {
+                                var xhr = [],
+                                    i;
+                                for (let i = 0; i < elementArray.length; i++) { //for loop
+                                    (function(i) {
+                                        xhr[i] = new XMLHttpRequest();
+                                        url = '/ping/' + elementArray[i].id;
+                                        xhr[i].open("GET", url, true);
+                                        xhr[i].onreadystatechange = function() {
+                                            if (xhr[i].readyState === 4 && xhr[i].status === 200) {
+                                                console.log(xhr[i].responseText);
+                                                if (xhr[i].responseText === 'Online') {
+                                                    document.getElementById(elementArray[i].id).classList.add("pingOnline");
+                                                    document.getElementById(elementArray[i].id).classList.remove('pingOffline');
+                                                } else {
+                                                    document.getElementById(elementArray[i].id).classList.add("pingOffline");
+                                                    document.getElementById(elementArray[i].id).classList.remove('pingOnline');
+                                                }
+
+                                            }
+                                        };
+                                        xhr[i].send();
+                                    })(i);
+                                }
+                            })();
+                        }
+                        ping();
+                        setInterval(() => {
+                            ping()
+                        }, 5000);
+                    </script>
+        </section>
+        <%- include('_Layout/footer'); -%>

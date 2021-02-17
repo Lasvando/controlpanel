@@ -1,0 +1,80 @@
+<%- include('_Layout/head', {title : 'Aggiungi Sezione'}); -%>
+    <%- include('_Layout/sidebar', {active: 'Aggiungi Sezione'}) -%>
+        <section>
+            <div class="container">
+
+                <h1 class="text-center">Aggiungi Sezione</h1>
+
+                <form method="post" action="#" class="mb-4 my-5 d-flex justify-content-center">
+                    <div class="d-inline-flex">
+                        <input class="form-control mr-2" type="text" name="nomeSezione" id="nomeSezione" maxlength="15" placeholder="Aggiungi Sezione">
+                        <button id="submitBtn" class="btn btn-success" type="submit">Inserisci</button>
+                    </div>
+                </form>
+
+                <div class="list-group d-flex m-auto">
+                    <% sezioni.forEach(sezione => { %>
+                        <a href="#" id="<%- sezione['id'] %>-sec" class="list-group-item list-group-item-action text-center" data-toggle="tooltip" data-placement="right" title="Clicca per eliminare" onclick="deleteSection(this.id)">
+                            <%- sezione['nome'] %>
+                        </a>
+                        <% }) %>
+                            <% if (sezioni.length == 0) { %>
+                                <li class="list-group-item text-danger text-center font-weight-bold">Nessuna sezione presente nel DB</li>
+                                <% } %>
+                </div>
+            </div>
+            <script>
+                document.getElementById("submitBtn").addEventListener("click", function(event) {
+                    event.preventDefault();
+
+                    let nomeSezione;
+
+                    if (document.getElementById('nomeSezione').value === "") {
+                        alert("Inserire un nome");
+                        document.getElementById('nomeSezione').classList += ' border border-danger';
+                        return;
+                    } else
+                        nomeSezione = document.getElementById('nomeSezione').value;
+
+                    var http = new XMLHttpRequest();
+                    var url = '/addSection';
+                    var params = `nomeSezione=${nomeSezione}`;
+                    http.open('POST', url, true);
+                    //Send the proper header information along with the request
+                    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    http.onreadystatechange = function() { //Call a function when the state changes.
+                        if (http.readyState == 4 && http.status == 200) {
+                            alert(`Sezione: ${nomeSezione}\nInserita con successo.`)
+                            location.reload();
+                        }
+                    }
+                    http.send(params);
+                });
+
+                function deleteSection(id) {
+                    if (!confirm(`ATTENZIONE\nSei sicuro di voler eliminare: ${document.getElementById(id).innerText}?`))
+                        return;
+
+                    idSezione = id.substring(0, id.length - 4);
+                    console.log(idSezione);
+                    nomeSezione = document.getElementById(id).innerText;
+
+                    var http = new XMLHttpRequest();
+                    var url = '/deleteSection';
+                    var params = `idSezione=${idSezione}`;
+                    http.open('POST', url, true);
+                    //Send the proper header information along with the request
+                    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+                    http.onreadystatechange = function() { //Call a function when the state changes.
+                        if (http.readyState == 4 && http.status == 200) {
+                            alert(`Sezione: ${nomeSezione}\nEliminata con successo.`);
+                            location.reload();
+                        }
+                    }
+                    http.send(params);
+                }
+            </script>
+        </section>
+        <%- include('_Layout/footer'); -%>

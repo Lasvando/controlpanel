@@ -1,0 +1,68 @@
+<div class="overlay"></div>
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>ControlPanel</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <!-- <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">Home</a>
+                <ul class="collapse list-unstyled" id="homeSubmenu">
+                    <li>
+                        <a href="#">Home 1</a>
+                    </li>
+                    <li>
+                        <a href="#">Home 2</a>
+                    </li>
+                    <li>
+                        <a href="#">Home 3</a>
+                    </li>
+                </ul>
+            </li> -->
+            <li id="home-li">
+                <a href="/">Home</a>
+            </li>
+            <li id="addCat-li">
+                <a href="/addCategory">Aggiungi Categoria</a>
+            </li>
+            <li id="addSez-li">
+                <a href="/addSection">Aggiungi Sezione</a>
+            </li>
+            <li id="addElem-li">
+                <a href="/addElement">Aggiungi Elemento</a>
+            </li>
+            <li id="about-li">
+                <a href="/about">About</a>
+            </li>
+            <li id="logout-li">
+                <a href="/logout">Logout</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Menu</span>
+                </button>
+            </div>
+        </nav>
+        <script>
+            if (`<%= active %>` === "Home")
+                document.getElementById('home-li').className += 'font-weight-bold'
+            else if (`<%= active %>` === "Aggiungi Categoria")
+                document.getElementById('addCat-li').className += 'font-weight-bold'
+            else if (`<%= active %>` === "Aggiungi Sezione")
+                document.getElementById('addSez-li').className += 'font-weight-bold'
+            else if (`<%= active %>` === "Aggiungi Elemento")
+                document.getElementById('addElem-li').className += 'font-weight-bold'
+            else if (`<%= active %>` === "About")
+                document.getElementById('about-li').className += 'font-weight-bold'
+        </script>
