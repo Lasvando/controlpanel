@@ -65,7 +65,7 @@ CREATE TABLE `login` (
 --
 
 INSERT INTO `login` (`id`, `username`, `password`) VALUES
-(1, 'federico.sciarabba', 'Trottola1!');
+(1, 'user', 'password');
 
 -- --------------------------------------------------------
 
